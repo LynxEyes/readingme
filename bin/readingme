@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'listen'
+
+input  = ARGV[0] || "README.md"
+output = ARGV[1] || "README.html"
+
+listener = Listen.to('./').filter(%r[#{input}$]).change do
+  %x(build_tables.rb #{input} | encode.rb | pandoc -f markdown -t html --ascii | github_wrap.rb > #{output})
+  %x(pandoc -t textile -s #{output} -o #{output}.textile)
+end
+
+listener.start
+begin
+  sleep Time.now.to_i # "forever"...
+rescue Interrupt => e
+  puts "bye bye"
+end
+
