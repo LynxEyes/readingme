@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Readingme::VERSION
   spec.authors       = ["LynxEyes"]
   spec.email         = ["ivo.jesus@gmail.com"]
-  spec.description   = %q{Small Markdown to HTML encoder which uses Github readme stylesheet}
+  spec.description   = %q{Small Markdown to HTML encoder which uses Github readme stylesheet and highlight.js}
   spec.summary       = %q{Markdown to HTML encoder}
   spec.homepage      = ""
   spec.license       = "MIT"
@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'listen'
   spec.add_dependency 'htmlentities'
+  spec.add_dependency 'pandoc-ruby'
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
 end

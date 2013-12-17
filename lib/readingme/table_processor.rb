@@ -1,10 +1,9 @@
-# !/usr/bin/env ruby
 module Readingme
   class TableProcessor
 
     # =============================================================================
     class << self
-      def process input=$stdin, output=$stdout
+      def call input=$stdin, output=$stdout
         tab_proc = self.new
         input.each do |line|
           output.puts tab_proc.process_line(line)
@@ -25,8 +24,12 @@ module Readingme
 
     # =============================================================================
     def process_line line
-      if line =~ /^\!table$/
-        start_stop
+      if line =~ /^```(table)?$/
+        if !$1 and @state == :normal
+          process_table_line line
+        else
+          start_stop
+        end
       else
         process_table_line line
       end
@@ -63,7 +66,7 @@ module Readingme
       def process_table_line line
         return line if @state == :normal
 
-        if line =~ /^ {4,}[-+]+$/
+        if line =~ /^ *-{3,}/
           change_state
           ""
         else
@@ -73,12 +76,3 @@ module Readingme
 
   end # class TableProcessor
 end # module Readingme
-
-#------------------------------------
-
-input  = ARGV[0] ? File.open(ARGV[0], "r") : $stdin
-output = ARGV[1] ? File.open(ARGV[1], "w") : $stdout
-
-Readingme::TableProcessor.process input, output
-input.close
-output.close

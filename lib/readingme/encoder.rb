@@ -1,17 +1,15 @@
-#!/usr/bin/env ruby
-
 module Readingme
   class Encoder
     # =============================================================================
     class << self
-      def process input=$stdin, output=$stdout
+      def call input=$stdin, output=$stdout
         encoder = self.new
-
         input.each do |line|
           output.puts encoder.process_line(line)
         end
       end
     end
+    # =============================================================================
 
     EMPTY_LINE = /\A$\Z/
     PRE_LINE   = /( {4,}|\!table|`{3})/
@@ -53,10 +51,10 @@ module Readingme
 end # module Readingme
 
 #------------------------------------
-input  = ARGV[0] ? File.open(ARGV[0], "r") : $stdin
-output = ARGV[1] ? File.open(ARGV[1], "w") : $stdout
+# input  = ARGV[0] ? File.open(ARGV[0], "r") : $stdin
+# output = ARGV[1] ? File.open(ARGV[1], "w") : $stdout
 
-Readingme::Encoder.process input, output
-input.close
-output.close
+# Readingme::Encoder.process input, output
+# input.close
+# output.close
 
