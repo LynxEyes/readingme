@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["ivo.jesus@gmail.com"]
   spec.description   = %q{Small Markdown to HTML encoder which uses Github readme stylesheet and highlight.js}
   spec.summary       = %q{Markdown to HTML encoder}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/LynxEyes/readingme"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
