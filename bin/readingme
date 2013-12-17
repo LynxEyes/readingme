@@ -1,29 +1,43 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'listen'
+require 'optparse'
 require 'readingme'
 
-input  = ARGV[0] || "README.md"
-output = ARGV[1] || "README.html"
+# -----------------------------------------------------------------------------
+# Option parsing...
 
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: readingme [file]"
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
+    exit 1
+  end
+end
+parser.parse!
+
+input = ARGV[0] || "\\.md"
+
+# -----------------------------------------------------------------------------
 listener = Listen.to('./', only: %r[#{input}$]) do |modified, _, _|
   table_processor = Readingme::TableProcessor
   encoder         = Readingme::Encoder
   converter       = Readingme::Converter
   github_wrapper  = Readingme::GithubWrapper
 
-  modified.each do |file_name|
+  modified.each do |filename|
     # pandoc_html_cmd = "pandoc -f markdown -t html --ascii"
     # pandoc_textile_cmd = "pandoc -t textile -s #{output} -o #{output}.textile"
 
     pipeline = table_processor | encoder | converter | github_wrapper
-    pipeline << File.open(file_name, "r")
+    pipeline << File.open(filename, "r")
     pipeline.close
 
-    File.open(output,"w") do |file|
-      file.write pipeline.read
-    end        
+    output_filename = filename.gsub(/\.md$/,".html")
 
+    File.open(output_filename, "w") do |file|
+      file.write pipeline.read
+    end
   end
 
   # %x(build_tables.rb #{input} | encode.rb | pandoc -f markdown -t html --ascii | github_wrap.rb > #{output})
